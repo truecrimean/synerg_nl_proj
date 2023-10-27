@@ -1,0 +1,60 @@
+<script setup>
+import { ref } from 'vue';
+import { onMounted } from 'vue'
+import NewsListItem from "@/components/NewsListItem.vue";
+
+let datalink = 'https://newsdata.io/api/1/news?apikey=pub_319138aec4cb780650c15152c47d861c4895c&q=новости';
+
+const scrollCorrector = 0;
+let data = ref({
+  loading: false,
+  items: [],
+  pageCount: 0,
+  nextPage: '',
+  dataLink: datalink,
+});
+
+function getMorePosts() {
+  window.onscroll = () => {
+    let parEl = document.getElementById('news-list-wr');
+    console.log('window.innerHeight: ', window.innerHeight);
+    console.log('getBoundingClientRect: ', parEl.getBoundingClientRect().bottom + + scrollCorrector);
+    let needToLoad = parEl.getBoundingClientRect().bottom - scrollCorrector < window.innerHeight;
+    console.log('needToLoad: ', needToLoad);
+    if (needToLoad) {
+      loadPosts();
+    }
+  }
+}
+
+function loadPosts() {
+  let urlSuffix = data.value.nextPage === '' ? '' : 'page=' + data.value.nextPage;
+
+  fetch(data.value.dataLink + urlSuffix)
+      .then(
+          r => r.json()
+      )
+      .then(d => {
+        if (d.status === 'success') {
+
+          data.value.items.push(...d.results);
+          data.value.nextPage = d.nextPage;
+          data.value.pageCount++;
+        }
+      });
+}
+
+onMounted(() => {
+  loadPosts();
+  getMorePosts();
+});
+
+</script>
+
+<template>
+  <div id="news-list-wr">
+    <div v-for="item in data.items" class="news-list-item-wr">
+      <NewsListItem :postInfo="item"/>
+    </div>
+  </div>
+</template>

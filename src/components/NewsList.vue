@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { onMounted } from 'vue'
 import NewsListItem from "@/components/NewsListItem.vue";
 
@@ -16,14 +16,16 @@ let data = ref({
 
 function getMorePosts() {
   window.onscroll = () => {
-    let parEl = document.getElementById('news-list-wr');
-    console.log('window.innerHeight: ', window.innerHeight);
-    console.log('getBoundingClientRect: ', parEl.getBoundingClientRect().bottom + + scrollCorrector);
-    let needToLoad = parEl.getBoundingClientRect().bottom - scrollCorrector < window.innerHeight;
-    console.log('needToLoad: ', needToLoad);
-    if (needToLoad) {
-      loadPosts();
-    }
+    setTimeout(()=>{
+      let parEl = document.getElementById('news-list-wr');
+      console.log('window.innerHeight: ', window.innerHeight);
+      console.log('getBoundingClientRect: ', parEl.getBoundingClientRect().bottom + + scrollCorrector);
+      let needToLoad = parEl.getBoundingClientRect().bottom - scrollCorrector < window.innerHeight;
+      console.log('needToLoad: ', needToLoad);
+      if (needToLoad) {
+        loadPosts();
+      }
+    }, 500);
   }
 }
 
@@ -43,10 +45,23 @@ function loadPosts() {
         }
       });
 }
+watch(data.value.items, (newItems, oldItems) => {
+  let myStorage = window.localStorage;
+  if (myStorage){
+    let articles = myStorage.getItem('articles');
+    articles = (articles === null || articles === '') ? {} : JSON.parse(articles);
+    for (let item of newItems) {
+      if (!articles || articles[item.article_id] === undefined) {
+        articles[item.article_id] = item;
+      }
+    }
+    myStorage.setItem('articles', JSON.stringify(articles));
+  }
+});
 
 onMounted(() => {
   loadPosts();
-  getMorePosts();
+  //getMorePosts();
 });
 
 </script>

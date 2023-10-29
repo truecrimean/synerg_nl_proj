@@ -5,7 +5,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <aside class="left-menu">
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <img alt="Synergy logo" class="logo" src="@/assets/sinergy-project-logo.svg" width="163" height="91" />
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Главная</RouterLink>
@@ -30,7 +30,7 @@ aside {
 
 nav {
   width: 100%;
-  font-size: 12px;
+  font-size: 16px;
   text-align: center;
   margin-top: 2rem;
 }

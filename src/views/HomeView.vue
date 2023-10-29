@@ -1,5 +1,5 @@
 <script setup>
-import NewsList from '../components/NewsList.vue'
+  import NewsList from '../components/NewsList.vue'
 </script>
 
 <template>

@@ -1,15 +1,12 @@
+<script setup>
+  import FavoritePage from "@/components/FavoritePage.vue";
+</script>
 <template>
-  <div class="favorite">
-    <h1>This is an about page</h1>
-  </div>
+  <main id="base-news-wr">
+    <FavoritePage/>
+  </main>
 </template>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
+
 </style>

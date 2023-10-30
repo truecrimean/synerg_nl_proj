@@ -1,11 +1,10 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
   <aside class="left-menu">
-    <img alt="Synergy logo" class="logo" src="@/assets/sinergy-project-logo.svg" width="163" height="91" />
+    <a href="/"><img alt="Synergy logo" class="logo" src="@/assets/sinergy-project-logo.svg" width="163" height="91" /></a>
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Главная</RouterLink>

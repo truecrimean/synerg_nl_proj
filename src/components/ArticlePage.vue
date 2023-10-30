@@ -1,11 +1,31 @@
 <script setup>
 import imgTemplate from "../assets/news-template.jpeg";
+import {ref} from "vue";
 const props = defineProps({
   article_id: {
     type: String,
     required: true
   }
-})
+});
+let data = ref({
+  isFavorite: isFavorite(),
+});
+
+function isFavorite() {
+  let isFav = false;
+  let myStorage = window.localStorage;
+  if (myStorage) {
+    let favoritesIndxs = myStorage.getItem('favorites');
+    favoritesIndxs = (favoritesIndxs === null || favoritesIndxs === '') ? [] : JSON.parse(favoritesIndxs);
+    favoritesIndxs.forEach((felement, findex) => {
+      if (props.article_id === felement){
+        isFav = true;
+      };
+    });
+  }
+
+  return isFav;
+}
 function getArticle(id) {
   let article = null;
   let myStorage = window.localStorage;
@@ -23,6 +43,25 @@ function getArticle(id) {
 
 const article = getArticle(props.article_id);
 const img = article.image_url ? article.image_url : imgTemplate;
+
+function toggleFavorite(id) {
+  let myStorage = window.localStorage;
+  if (myStorage){
+    let favorites = myStorage.getItem('favorites');
+    favorites = (favorites === null || favorites === '') ? [] : JSON.parse(favorites);
+    const favIndex = favorites.indexOf(id);
+    if (favIndex > -1) {
+      favorites.splice(favIndex, 1);
+      data.value.isFavorite = false;
+    }
+    else {
+      favorites.push(id);
+      data.value.isFavorite = true;
+    }
+    myStorage.setItem('favorites', JSON.stringify(favorites));
+  }
+}
+
 </script>
 
 <template>
@@ -31,7 +70,7 @@ const img = article.image_url ? article.image_url : imgTemplate;
     <div class="media-section">
       <img :src="img">
       <div class="media-meta">
-        <button class="favorite-btn"></button>
+        <button class="favorite-btn" @click="toggleFavorite(props.article_id)" :class="[data.isFavorite ? 'checked': '']"></button>
       </div>
     </div>
     <div class="content-section">
